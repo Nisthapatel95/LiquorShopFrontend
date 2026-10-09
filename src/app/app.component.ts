@@ -263,13 +263,14 @@ export class AppComponent {
     { path: '/sales',     label: 'Sales',      icon: '💰' },
   ];
   adminNav: NavItem[] = [
-    { path: '/purchases',  label: 'Purchases',  icon: '🚚' },
-    { path: '/ocr-scan',   label: 'OCR Scan',   icon: '📷' },
-    { path: '/suppliers',  label: 'Suppliers',  icon: '🏭' },
-    { path: '/categories', label: 'Categories', icon: '🏷️' },
-    { path: '/reports',    label: 'Reports',    icon: '📈' },
-    { path: '/users',      label: 'Users',      icon: '👥' },
-    { path: '/audit-logs', label: 'Audit Logs', icon: '🔍' },
+    { path: '/purchases',        label: 'Purchases',       icon: '🚚' },
+    { path: '/ocr-scan',         label: 'OCR Scan',        icon: '📷' },
+    { path: '/suppliers',        label: 'Suppliers',       icon: '🏭' },
+    { path: '/categories',       label: 'Categories',      icon: '🏷️' },
+    { path: '/reports',          label: 'Reports',         icon: '📈' },
+    { path: '/sales-analytics', label: 'Sales Analytics', icon: '🔥' },
+    { path: '/users',            label: 'Users',           icon: '👥' },
+    { path: '/audit-logs',       label: 'Audit Logs',      icon: '🔍' },
   ];
 
   get initial(): string {

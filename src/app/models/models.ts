@@ -93,3 +93,38 @@ export interface SalesSummary {
 export interface PurchaseSummary {
   date: string; totalOrders: number; totalPurchased: number;
 }
+
+export interface ProductPurchaseReport {
+  date: string;
+  productId: number;
+  productName: string;
+  sku: string;
+  categoryName: string;
+  supplierName: string;
+  totalQuantity: number;
+  avgUnitPrice: number;
+  totalAmount: number;
+}
+
+export interface DailyProductSales {
+  date: string;
+  productId: number;
+  productName: string;
+  sku: string;
+  categoryName: string;
+  totalQuantity: number;
+  avgSellingPrice: number;
+  totalRevenue: number;
+}
+
+export interface BestSellingProduct {
+  productId: number;
+  productName: string;
+  sku: string;
+  categoryName: string;
+  totalQuantitySold: number;
+  totalRevenue: number;
+  totalOrders: number;
+}
+
+

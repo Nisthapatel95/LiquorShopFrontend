@@ -66,8 +66,18 @@ interface CartEntry { product: Product; quantity: number; }
 
     <div class="pos-layout">
 
+      <!-- Mobile Tab Switcher (Visible only on mobile screens <= 768px) -->
+      <div class="mobile-tab-bar">
+        <button class="tab-btn" [class.active]="activeMobileTab === 'products'" (click)="activeMobileTab = 'products'">
+          🍷 Products
+        </button>
+        <button class="tab-btn" [class.active]="activeMobileTab === 'cart'" (click)="activeMobileTab = 'cart'">
+          🛒 Cart <span class="tab-badge" *ngIf="cart.length">{{ cart.length }}</span>
+        </button>
+      </div>
+
       <!-- ── Product Panel ── -->
-      <div class="product-panel">
+      <div class="product-panel" [class.mobile-hidden]="activeMobileTab === 'cart'">
         <div class="panel-toolbar">
           <div class="search-bar" style="flex:1">
             <span class="search-icon">🔍</span>
@@ -92,7 +102,7 @@ interface CartEntry { product: Product; quantity: number; }
       </div>
 
       <!-- ── Cart Panel ── -->
-      <div class="cart-panel">
+      <div class="cart-panel" [class.mobile-hidden]="activeMobileTab === 'products'">
         <div class="cart-header">
           <h3>🛒 Cart <span class="cart-count" *ngIf="cart.length">{{ cart.length }}</span></h3>
           <button class="btn btn-ghost btn-sm" (click)="clearCart()" *ngIf="cart.length">Clear</button>
@@ -181,6 +191,8 @@ interface CartEntry { product: Product; quantity: number; }
       height: calc(100vh - 130px);
     }
 
+    .mobile-tab-bar { display: none; }
+
     /* Product panel */
     .product-panel {
       flex: 1; display: flex; flex-direction: column; gap: 14px; min-width: 0;
@@ -226,6 +238,7 @@ interface CartEntry { product: Product; quantity: number; }
     .cart-empty {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; color: var(--muted);
+      padding: 20px; text-align: center;
     }
     .cart-body { flex: 1; overflow-y: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
     .cart-items { display: flex; flex-direction: column; }
@@ -253,7 +266,7 @@ interface CartEntry { product: Product; quantity: number; }
     .rm-btn:hover { background: #fee2e2; color: var(--danger); }
 
     /* Totals */
-    .cart-totals { padding: 14px 16px; border-top: 1px solid var(--border); }
+    .cart-totals { padding: 14px 16px; border-top: 1px solid var(--border); background: #fff; }
     .ct-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 5px 0; font-size: 13.5px;
@@ -290,31 +303,64 @@ interface CartEntry { product: Product; quantity: number; }
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Receipt modal */
-    .receipt-modal { max-width: 360px; font-family: monospace; }
-    .receipt-header { text-align: center; margin-bottom: 12px; }
-    .receipt-logo { font-size: 1.2rem; font-weight: 800; }
-    .receipt-title { font-size: 11px; letter-spacing: .1em; color: var(--muted); margin: 4px 0; }
-    .receipt-order { font-weight: 700; }
-    .receipt-date { font-size: 11px; color: var(--muted); }
-    .receipt-cashier { font-size: 12px; margin-bottom: 8px; }
-    .receipt-divider { color: var(--muted); font-size: 12px; margin: 8px 0; }
-    .receipt-items { display: flex; flex-direction: column; gap: 6px; }
-    .receipt-item { display: flex; gap: 8px; font-size: 13px; }
-    .ri-name { flex: 1; }
-    .ri-qty { color: var(--muted); }
-    .ri-price { font-weight: 700; min-width: 70px; text-align: right; }
-    .receipt-totals { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
-    .rt-row { display: flex; justify-content: space-between; font-size: 13px; }
-    .rt-row.total { font-weight: 800; font-size: 15px; padding-top: 6px; border-top: 1px solid var(--border); }
-    .receipt-footer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; }
-    .cust-input { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; box-sizing: border-box; }
+    /* Mobile view rules */
+    @media (max-width: 768px) {
+      .pos-layout {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+      }
+      .mobile-tab-bar {
+        display: flex;
+        background: #e2e8f0;
+        border-radius: 10px;
+        padding: 3px;
+      }
+      .tab-btn {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #64748b;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .tab-btn.active {
+        background: #ffffff;
+        color: #0f172a;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+      .tab-badge {
+        background: #f59e0b;
+        color: #000;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 10px;
+      }
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+      .cart-panel {
+        width: 100%;
+        min-width: 0;
+      }
+      .mobile-hidden {
+        display: none !important;
+      }
+    }
   `]
 })
 export class PosComponent implements OnInit {
   products:     Product[]    = [];
   filtered:     Product[]    = [];
   cart:         CartEntry[]  = [];
+  activeMobileTab: 'products' | 'cart' = 'products';
   search           = '';
   cashierNameInput = '';
   customerName     = '';

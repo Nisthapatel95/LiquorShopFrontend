@@ -50,6 +50,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard], data: { roles: ['Admin'] }
   },
   {
+    path: 'sales-analytics',
+    loadComponent: () => import('./pages/sales-analytics/sales-analytics.component').then(m => m.SalesAnalyticsComponent),
+    canActivate: [AuthGuard], data: { roles: ['Admin'] }
+  },
+  {
     path: 'audit-logs',
     loadComponent: () => import('./pages/audit-logs/audit-logs.component').then(m => m.AuditLogsComponent),
     canActivate: [AuthGuard], data: { roles: ['Admin'] }
